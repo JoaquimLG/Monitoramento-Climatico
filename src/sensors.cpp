@@ -1,0 +1,21 @@
+#include "sensors.h"
+
+void setupSensores() {
+    dht.begin();
+
+    pinMode(SENSORLUMINOSIDADE, INPUT);
+    pinMode(POTENCIOMETRO, INPUT);
+}
+
+void lerSensores() {
+    temperatura = dht.readTemperature();
+    umidade = dht.readHumidity();
+    valorLuminosidade = analogRead(SENSORLUMINOSIDADE);
+    valorPotenciometro = analogRead(POTENCIOMETRO);
+
+    //EXIBE OS VALORES NO MONITOR SERIAL
+    Serial.printf("Temperatura: %.1f\n", temperatura);
+    Serial.printf("Umidade: %.1f\n", umidade);
+    Serial.printf("Luminosidade: %d\n", valorLuminosidade);
+    Serial.printf("Potenciometro: %d\n", valorPotenciometro);
+}
