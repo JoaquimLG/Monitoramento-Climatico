@@ -13,7 +13,6 @@ void lerSensores() {
     valorLuminosidade = analogRead(SENSORLUMINOSIDADE);
     valorPotenciometro = analogRead(POTENCIOMETRO);
 
-    //EXIBE OS VALORES NO MONITOR SERIAL
     Serial.printf("Temperatura: %.1f\n", temperatura);
     Serial.printf("Umidade: %.1f\n", umidade);
     Serial.printf("Luminosidade: %d\n", valorLuminosidade);

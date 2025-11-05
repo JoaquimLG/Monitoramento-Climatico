@@ -282,10 +282,20 @@ static void paginaPrincipal(){
 
 static void enviarDados() {
     String json = "{";
+
+    if(xSemaphoreTake(xMutexGlobais, portMAX_DELAY) == pdTRUE){
     json += "\"temperatura\":" + String(temperatura, 1) + ",";
     json += "\"umidade\":" + String(umidade, 1) + ",";
     json += "\"luminosidade\":" + String(valorLuminosidade) + ",";
     json += "\"poluicao\":" + String(valorPotenciometro) + "}";
+    server.send(200, "application/json", json);
+
+    xSemaphoreGive(xMutexGlobais);
+    }
+
+    else{
+      json = "{\"erro\":\"Recurso ocupado\"}";
+    }
     server.send(200, "application/json", json);
 }
 

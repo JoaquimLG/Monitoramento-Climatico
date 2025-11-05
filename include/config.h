@@ -24,4 +24,6 @@ extern float umidade;
 extern int valorLuminosidade;
 extern int valorPotenciometro;
 
+extern SemaphoreHandle_t xMutexGlobais;
+
 #endif 
