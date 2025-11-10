@@ -6,7 +6,7 @@ void setupLeds() {
 }
 
 void atualizarLeds() {
-    //VERIFICA SE OS DADOS DE TEMPERATURA E UMIDADE FORAM RECEBIDOS CORRETAMENTE 
+    //Verifica se os dados do Dht11 foram recebedidos
   if (!isnan(temperatura) && !isnan(umidade)) {
     if (temperatura > 30 || umidade < 40) { 
       digitalWrite(LEDVERMELHO, HIGH);

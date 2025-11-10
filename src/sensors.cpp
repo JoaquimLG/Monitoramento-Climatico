@@ -8,6 +8,7 @@ void setupSensores() {
 }
 
 void lerSensores() {
+    //Recebe os valores dos sensores
     temperatura = dht.readTemperature();
     umidade = dht.readHumidity();
     valorLuminosidade = analogRead(SENSORLUMINOSIDADE);

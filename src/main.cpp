@@ -5,15 +5,15 @@
 #include "tasks.h"
 
 
-const char* nomeRede = "Esp-32";
-const char* senha = "senha1210";
+//Aqui fica o nome da rede e senha
+const char* nomeRede = "NomeRede";  
+const char* senha = "Senha"; 
 IPAddress globalIP;
 
 WebServer server(80);
 
-//CRIA O OBJETO DO SENSOR DE TEMPERATURA E UMIDADE
+//Cria o objeto do sensor de temperatura e umidade
 DHT dht(DHTPIN, DHTTYPE);
-
 
 float temperatura = 0.0;
 float umidade = 0.0;
@@ -25,7 +25,7 @@ SemaphoreHandle_t xMutexGlobais;
 void setup() {
   Serial.begin(115200);
   
-  //FAZ A CHAMADA DE TODOS OS SETUPS
+  //Faz a chamada de todos os setups
   setupSensores();
   setupServidorWeb();
   setupLeds();
@@ -35,7 +35,7 @@ void setup() {
     Serial.println("Não foi possível criar o mutex");
   }
   
-  //CRIAÇÃO DAS TASKS
+  //Criação das tasks
   xTaskCreatePinnedToCore(vTaskLerSensores, "Task sensores", 2048, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(vTaskControleLeds, "Task controle de leds", 2048, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(vTaskServidorWeb, "Task servidor web", 4096, NULL, 2, NULL, 1);

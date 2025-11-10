@@ -329,11 +329,25 @@ static void enviarDados() {
 
 //CRIA O PONTO DE ACESSO E INICIALIZA O SERVIDOR WEB
 void setupServidorWeb() {
-    WiFi.softAP(nomeRede, senha);
+    /* Para a esp32 criar um ponto de acesso
+    
+    WiFi.softAP(nomeRede, senha); 
+
     globalIP = WiFi.softAPIP();
     Serial.print("Endereço IP: ");
-    Serial.println(globalIP);
+    Serial.println(globalIP); */
 
+    WiFi.begin(nomeRede, senha);
+
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500); 
+    Serial.print(".");
+    }
+
+    globalIP = WiFi.localIP();
+    Serial.print("Endereço IP: ");
+    Serial.println(globalIP);
+    
     server.on("/", paginaPrincipal);
     server.on("/dados", enviarDados);
     server.begin();
