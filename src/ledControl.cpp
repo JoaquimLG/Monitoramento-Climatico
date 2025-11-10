@@ -10,12 +10,12 @@ void atualizarLeds() {
   if (!isnan(temperatura) && !isnan(umidade)) {
     if (temperatura > 30 || umidade < 40) { 
       digitalWrite(LEDVERMELHO, HIGH);
-      delay(200);
+      vTaskDelay(pdMS_TO_TICKS(200));
       digitalWrite(LEDVERMELHO, LOW);
     }
   }
 
-  if (valorLuminosidade > 300) {
+  if (valorLuminosidade < 1000) {
     digitalWrite(LEDAMARELO, HIGH);
   } else {
     digitalWrite(LEDAMARELO,LOW);

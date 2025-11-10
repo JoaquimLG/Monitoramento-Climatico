@@ -7,13 +7,14 @@
 
 const char* nomeRede = "Esp-32";
 const char* senha = "senha1210";
+IPAddress globalIP;
 
 WebServer server(80);
 
 //CRIA O OBJETO DO SENSOR DE TEMPERATURA E UMIDADE
 DHT dht(DHTPIN, DHTTYPE);
 
-//INICIALIZANDO AS VARIAVEIS
+
 float temperatura = 0.0;
 float umidade = 0.0;
 int valorLuminosidade = 0;
@@ -24,6 +25,7 @@ SemaphoreHandle_t xMutexGlobais;
 void setup() {
   Serial.begin(115200);
   
+  //FAZ A CHAMADA DE TODOS OS SETUPS
   setupSensores();
   setupServidorWeb();
   setupLeds();

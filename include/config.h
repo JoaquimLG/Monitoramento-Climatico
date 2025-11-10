@@ -15,6 +15,7 @@
 
 extern const char* nomeRede;
 extern const char* senha;
+extern IPAddress globalIP;
 
 extern WebServer server;
 extern DHT dht;

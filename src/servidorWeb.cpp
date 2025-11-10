@@ -1,6 +1,6 @@
 #include "servidorWeb.h"
 
-static void paginaPrincipal(){
+static void paginaPrincipal() {
     String html = R"rawliteral(
     <!DOCTYPE html>
 <html lang="pt-BR">
@@ -101,7 +101,6 @@ static void paginaPrincipal(){
       transition: 0.3s;
     }
 
-    /* botão info */
     .info-btn {
       position: absolute;
       top: 12px;
@@ -130,7 +129,6 @@ static void paginaPrincipal(){
       fill: #265df2;
     }
 
-    /* mini card de informação */
     .info-card {
       position: absolute;
       top: 40px;
@@ -255,23 +253,41 @@ static void paginaPrincipal(){
         const infoCard = card.querySelector('.info-card');
         const text = btn.dataset.sensor;
 
-        // Fecha todos os outros
         document.querySelectorAll('.info-card').forEach(c => {
           if (c !== infoCard) c.classList.remove('active');
         });
 
-        // Atualiza texto e alterna exibição
         infoCard.textContent = text;
         infoCard.classList.toggle('active');
       });
     });
 
-    // Fecha ao clicar fora
     document.addEventListener('click', e => {
       if (!e.target.closest('.info-btn') && !e.target.closest('.info-card')) {
         document.querySelectorAll('.info-card').forEach(c => c.classList.remove('active'));
       }
     });
+
+    // ===== NOVO SCRIPT PARA ATUALIZAR OS DADOS =====
+    async function atualizarDados() {
+      try {
+        const resposta = await fetch("/dados");
+        const dados = await resposta.json();
+
+        if (!dados.erro) {
+          document.getElementById("temp").textContent = dados.temperatura ?? "--";
+          document.getElementById("umid").textContent = dados.umidade ?? "--";
+          document.getElementById("luz").textContent = dados.luminosidade ?? "--";
+          document.getElementById("pol").textContent = dados.poluicao ?? "--";
+        }
+      } catch (e) {
+        console.error("Erro ao obter dados:", e);
+      }
+    }
+
+    setInterval(atualizarDados, 3000);
+    atualizarDados();
+    // ==============================================
   </script>
 </body>
 </html>
@@ -283,30 +299,41 @@ static void paginaPrincipal(){
 static void enviarDados() {
     String json = "{";
 
-    if(xSemaphoreTake(xMutexGlobais, portMAX_DELAY) == pdTRUE){
-    json += "\"temperatura\":" + String(temperatura, 1) + ",";
-    json += "\"umidade\":" + String(umidade, 1) + ",";
-    json += "\"luminosidade\":" + String(valorLuminosidade) + ",";
-    json += "\"poluicao\":" + String(valorPotenciometro) + "}";
-    server.send(200, "application/json", json);
+    float temp_local;
+    float umid_local;
+    int luz_local;
+    int pot_local;
 
-    xSemaphoreGive(xMutexGlobais);
+    if (xSemaphoreTake(xMutexGlobais, portMAX_DELAY) == pdTRUE) {
+        temp_local = temperatura;
+        umid_local = umidade;
+        luz_local = valorLuminosidade;
+        pot_local = valorPotenciometro;
+        xSemaphoreGive(xMutexGlobais);
+    } else {
+        json = "{\"erro\":\"Recurso ocupado\"}";
+        server.send(200, "application/json", json);
+        return;
     }
 
-    else{
-      json = "{\"erro\":\"Recurso ocupado\"}";
-    }
+    String temp_str = isnan(temp_local) ? "null" : String(temp_local, 1);
+    String umid_str = isnan(umid_local) ? "null" : String(umid_local, 1);
+
+    json += "\"temperatura\":" + temp_str + ",";
+    json += "\"umidade\":" + umid_str + ",";
+    json += "\"luminosidade\":" + String(luz_local) + ",";
+    json += "\"poluicao\":" + String(pot_local) + "}";
+
     server.send(200, "application/json", json);
 }
 
+//CRIA O PONTO DE ACESSO E INICIALIZA O SERVIDOR WEB
 void setupServidorWeb() {
-    //CRIA O PONTO DE ACESSO E EXIBE O ENDERECO IP NO
     WiFi.softAP(nomeRede, senha);
-    IPAddress ip = WiFi.softAPIP();
+    globalIP = WiFi.softAPIP();
     Serial.print("Endereço IP: ");
-    Serial.println(ip);
+    Serial.println(globalIP);
 
-    //INICIALIZA O SERVIDOR 
     server.on("/", paginaPrincipal);
     server.on("/dados", enviarDados);
     server.begin();

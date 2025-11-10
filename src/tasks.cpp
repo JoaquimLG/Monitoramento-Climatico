@@ -1,5 +1,4 @@
 #include "tasks.h"
-
 #include "config.h"
 #include "sensors.h"
 #include "ledControl.h"

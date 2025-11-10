@@ -17,4 +17,7 @@ void lerSensores() {
     Serial.printf("Umidade: %.1f\n", umidade);
     Serial.printf("Luminosidade: %d\n", valorLuminosidade);
     Serial.printf("Potenciometro: %d\n", valorPotenciometro);
+    Serial.print("http://");
+    Serial.println(globalIP);
+    Serial.println("---------------------");
 }
