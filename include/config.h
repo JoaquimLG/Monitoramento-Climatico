@@ -5,6 +5,10 @@
 #include <DHT.h>
 #include <WebServer.h>
 #include <WiFi.h>
+#include <WiFiClientSecure.h> 
+#include <UniversalTelegramBot.h>
+
+#define BOT_TOKEN "TOKEN_DO_BOT"
 
 #define LEDVERMELHO 22
 #define LEDAMARELO 21

@@ -15,7 +15,7 @@ void atualizarLeds() {
     }
   }
 
-  if (valorLuminosidade < 1000) {
+  if (valorLuminosidade < 300) {
     digitalWrite(LEDAMARELO, HIGH);
   } else {
     digitalWrite(LEDAMARELO,LOW);

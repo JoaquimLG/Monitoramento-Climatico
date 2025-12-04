@@ -6,8 +6,8 @@
 
 
 //Aqui fica o nome da rede e senha
-const char* nomeRede = "NomeRede";  
-const char* senha = "Senha"; 
+const char* nomeRede = "nomeRede";  
+const char* senha = "senha"; 
 IPAddress globalIP;
 
 WebServer server(80);
@@ -39,6 +39,7 @@ void setup() {
   xTaskCreatePinnedToCore(vTaskLerSensores, "Task sensores", 2048, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(vTaskControleLeds, "Task controle de leds", 2048, NULL, 1, NULL, 0);
   xTaskCreatePinnedToCore(vTaskServidorWeb, "Task servidor web", 4096, NULL, 2, NULL, 1);
+  xTaskCreatePinnedToCore(vTaskTelegram, "Task Telegram", 8192, NULL, 1, NULL, 1);
 
   Serial.println("Tasks iniciadas");
 
